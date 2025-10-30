@@ -34,7 +34,7 @@ options
         volumeMode      absolute;
         injectionRateSuSp
         {
-            thermo:rho.air     (3.0e-4 0); // kg/s
+            thermo:rho.air     (5.0e-3 0); // kg/s
         }
     }
 

@@ -22,21 +22,21 @@ FoamFile
     {
         type            patch;
         nFaces          1264;
-        startFace       246320;
+        startFace       364448;
     }
     impeller
     {
         type            wall;
         inGroups        1(wall);
         nFaces          2368;
-        startFace       247584;
+        startFace       365712;
     }
     vessel
     {
         type            wall;
         inGroups        1(wall);
         nFaces          5372;
-        startFace       249952;
+        startFace       368080;
     }
 )
 

@@ -67,7 +67,7 @@ FlotationModel::FlotationModel(const fvMesh& mesh, twoPhaseSystem& fluid, dimens
     const dictionary& attachmentModelDict =
         flotationProperties.subDict("attachmentModel");
 
-    attachmentModel = attachmentModelDict.getOrDefault<word>("type", "Yoon-Luttrell");
+    attachmentModel = attachmentModelDict.getOrDefault<word>("type", "YoonLuttrell");
     inductionTimeModel = attachmentModelDict.getOrDefault<word>("inductionTimeModel", "KohSchwarz");
 
     if(inductionTimeModel == "Dai"){
@@ -98,14 +98,12 @@ FlotationModel::FlotationModel(const fvMesh& mesh, twoPhaseSystem& fluid, dimens
 
     //////////////////////////////////////////////////////
 
-
 }
 
 FlotationModel::~FlotationModel(){}
 
 volScalarField FlotationModel::collisionEfficiency(){
-    if (collisionEfficiencyModel == "Sutherland"){
-        return volScalarField(
+    volScalarField Ec(
                 IOobject
                     (
                         "collisionEfficiency",
@@ -115,10 +113,34 @@ volScalarField FlotationModel::collisionEfficiency(){
                         IOobject::NO_WRITE
                     ), 
                 mesh_, 
-                (3 / 2) * ((d_p / d_b) * (d_p / d_b)));
-    } else{
+                dimensionedScalar("ONE", dimless, 1.0));
+
+    if (collisionEfficiencyModel == "Sutherland"){
+
+        Ec = 3 * (d_p / d_b);
+        // return Ec;
+
+
+    } else if (collisionEfficiencyModel == "Gaudin"){
+
+        Ec = (3.0 / 2.0) * (d_p / d_b) * (d_p / d_b);
+
+    } else if (collisionEfficiencyModel == "YoonLuttrell"){
+
+        volScalarField Re_b = Foam::mag(fluid_.phase1().URef()) * d_b / nu_F;
+        Ec = ((3.0 / 2.0) + (4.0 * Foam::pow(Re_b, 0.72) / 15.0)) * (d_p / d_b) * (d_p / d_b);
+
+    } else if (collisionEfficiencyModel == "WeberPaddock"){
+
+        volScalarField Re_b = Foam::mag(fluid_.phase1().URef()) * d_b / nu_F;
+        Ec = Foam::sin(theta_c_rad) * (1 + d_p / d_b) * (1 + d_p / d_b) * (Foam::mag(fluid_.phase2().URef()) / Foam::mag(fluid_.phase1().URef()));
+
+    } else {
         Info << "Unknown Collision model: " << collisionEfficiencyModel << nl << exit(FatalError);
     }
+
+    return Ec;
+
 }
 
 
@@ -134,10 +156,29 @@ volScalarField FlotationModel::attachmentEfficiency(){
         Info << "Unknown Induction time model: " << inductionTimeModel << nl << exit(FatalError);
     }
 
-    if (attachmentModel == "Yoon-Luttrell"){
+    if (attachmentModel == "YoonLuttrell"){
+
         volScalarField theta_a = 2 * Foam::atan(Foam::exp(-3 * Foam::mag(fluid_.phase1().URef()) * t_i / (d_b * ((d_b / d_p) + 1))));
         return Foam::pow(Foam::sin(theta_a), 2);
-    }else{
+
+    }else if (attachmentModel == "DobbyFinch"){
+
+        volScalarField theta_a = 2 * Foam::atan(Foam::exp(-t_i * (Foam::mag(fluid_.phase1().URef()) + Foam::mag(fluid_.phase2().URef()) * (2.0 + (Foam::pow(d_b / (d_p + d_b), 3)) / (d_p + d_b)))));
+        volScalarField sinTheta_c = theta_a;
+        volScalarField Re_b = Foam::mag(fluid_.phase1().URef()) * d_b / nu_F;
+        forAll(Re_b, i){
+            if (Re_b[i] > 20.0 ){
+                sinTheta_c = Foam::sin(78.1 - 7.37 * Foam::log(Re_b));
+            } else if (Re_b[i] > 1.0) {
+                sinTheta_c = Foam::sin(85.5 - 12.49 * Foam::log(Re_b));
+            } else {
+                sinTheta_c = Foam::sin(85.0 - 2.5 * Foam::log(Re_b));
+            }
+        }
+
+        return Foam::pow(Foam::sin(theta_a) / sinTheta_c, 2);
+
+    }else {
         Info << "Unknown Attachment model: " << attachmentModel << nl << exit(FatalError);
     }
 }
@@ -175,6 +216,10 @@ volScalarField FlotationModel::K_attachment(const volScalarField& epsilon, const
 
     if (collisionFrequencyModel == "SaffmanTurner"){
         Z = Foam::sqrt((8.0 * M_PI) / (15.0 * nu_F)) * (((d_p + d_b) / 2) * ((d_p + d_b) / 2) * ((d_p + d_b) / 2)) * Foam::sqrt(epsilon);
+    } else if (collisionFrequencyModel == "SchubertBischofberger"){
+        Z = 5.0 * (d_p * d_p / 4.0) * 
+            (0.4 *Foam::pow(epsilon, 4.0/9.0) * Foam::pow(d_b, 7.0/9.0) / Foam::pow(nu_F, 1.0/3.0)) * 
+            ((fluid_.phase2().rho() - fluid_.phase1().rho()) / fluid_.phase2().rho());
     } else{
         Info << "Unknown collisionFrequencyModel: " << collisionFrequencyModel << nl << exit(FatalError);
     }
@@ -186,6 +231,10 @@ volScalarField FlotationModel::K_attachment(const volScalarField& epsilon, const
     volScalarField beta = (fluid_.phase1().rho()/ fluid_.phase2().rho()) * 
                             (fluid_.phase1().Y(name_of_particles) / N_max) * 
                             (d_b * d_b * d_b / (d_p * d_p * d_p));
+
+    // Info << "beta : " << average(beta).value() << endl;
+    // Info << "fluid_.phase1().Y(name_of_particles) : " << average(fluid_.phase1().Y(name_of_particles)).value() << endl;
+
 
     return k1 * (1 - beta) * fluid_.phase2() / (( M_PI / 6.0) * (d_b * d_b * d_b));
 }
@@ -215,26 +264,45 @@ volScalarField FlotationModel::K_detachment(const volScalarField& epsilon, const
 
 FlotationSoursePart FlotationModel::flotationMassTransfer(){
 
-    const volScalarField& epsilon = mesh_.lookupObject<volScalarField>("epsilon.liquid");
+    // const volScalarField& epsilon = mesh_.lookupObject<volScalarField>("epsilon.liquid");
+
+    const volScalarField& k = mesh_.lookupObject<volScalarField>("k.liquid");
+    const volScalarField& omega = mesh_.lookupObject<volScalarField>("omega.liquid");
+    volScalarField epsilon = k * omega * scalar(0.09);
+
     const volScalarField& Es = stabilityEfficiency(epsilon);
 
     volScalarField Ka = K_attachment(epsilon, Es);
-
     volScalarField Kd = K_detachment(epsilon, Es);
 
-    fvScalarMatrix Q_gas = fvm::Sp(-Kd * fluid_.phase1() * fluid_.phase1().rho(), fluid_.phase1().Y(name_of_particles)) + 
-                                    Ka * fluid_.phase2() * fluid_.phase2().rho() * fluid_.phase2().Y(name_of_particles);
+    volScalarField alphaRho1 = fluid_.phase1() * fluid_.phase1().rho();
+    volScalarField alphaRho2 = fluid_.phase2() * fluid_.phase2().rho();
 
-    // fvScalarMatrix Q_gas = fvm::Sp(dimensionedScalar("ZERO", dimDensity/dimTime, 0.0), fluid_.phase1().Y(name_of_particles)) + 
+
+    // fvScalarMatrix Q_gas = fvm::Sp(-Kd * fluid_.phase1() * fluid_.phase1().rho(), fluid_.phase1().Y(name_of_particles)) + 
     //                                 Ka * fluid_.phase2() * fluid_.phase2().rho() * fluid_.phase2().Y(name_of_particles);
 
-    fvScalarMatrix Q_liquid = Kd * fluid_.phase1() * fluid_.phase1().rho() * fluid_.phase1().Y(name_of_particles) - 
-                      fvm::Sp(Ka * fluid_.phase2() * fluid_.phase2().rho(), fluid_.phase2().Y(name_of_particles));
+    // fvScalarMatrix Q_liquid = Kd * fluid_.phase1() * fluid_.phase1().rho() * fluid_.phase1().Y(name_of_particles) - 
+    //                   fvm::Sp(Ka * fluid_.phase2() * fluid_.phase2().rho(), fluid_.phase2().Y(name_of_particles));
 
-    // fvScalarMatrix Q_liquid = fvm::Sp(dimensionedScalar("ZERO", dimDensity/dimTime, 0.0), fluid_.phase2().Y(name_of_particles)) - 
+    // fvScalarMatrix Q_gas = fvm::Sp(dimensionedScalar("ZERO", dimDensity/dimTime, 0.0), fluid_.phase1().Y(name_of_particles)) -
+    //                                 Kd * fluid_.phase1() * fluid_.phase1().rho() * fluid_.phase1().Y(name_of_particles) + 
     //                                 Ka * fluid_.phase2() * fluid_.phase2().rho() * fluid_.phase2().Y(name_of_particles);
 
-    return FlotationSoursePart(Q_gas, Q_liquid);
+    // fvScalarMatrix Q_liquid = fvm::Sp(dimensionedScalar("ZERO", dimDensity/dimTime, 0.0), fluid_.phase2().Y(name_of_particles)) +
+    //                                 Kd * fluid_.phase1() * fluid_.phase1().rho() * fluid_.phase1().Y(name_of_particles)- 
+    //                                 Ka * fluid_.phase2() * fluid_.phase2().rho() * fluid_.phase2().Y(name_of_particles);
+
+    fvScalarMatrix Q_gas = fvm::Sp(-(Kd + Ka) * alphaRho1, fluid_.phase1().Y(name_of_particles)) +
+                            Ka * (alphaRho1 * fluid_.phase1().Y(name_of_particles) + alphaRho2 * fluid_.phase2().Y(name_of_particles));
+
+    fvScalarMatrix Q_liquid = fvm::Sp(-(Kd + Ka) * alphaRho2, fluid_.phase2().Y(name_of_particles)) +
+                            Kd * (alphaRho1 * fluid_.phase1().Y(name_of_particles) + alphaRho2 * fluid_.phase2().Y(name_of_particles));
+
+    // Info << "KaarY2 : " << average(Ka * fluid_.phase2() * fluid_.phase2().rho() * fluid_.phase2().Y(name_of_particles)).value() << endl;                                
+    // Info << "Ka : " << average(Ka).value() << nl << "Kd : " << average(Kd).value() << endl;
+
+    return FlotationSoursePart(1e-3 * Q_gas, 1e-3 * Q_liquid);
 
 }
 

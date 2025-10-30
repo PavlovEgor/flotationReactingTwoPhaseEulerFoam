@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     flotationReactingTwoPhaseEulerFoam;
+application     twoPhaseEulerFoam;
 
 startFrom       latestTime;
 
@@ -25,11 +25,11 @@ stopAt          endTime;
 
 endTime         30;
 
-deltaT          0.00005;
+deltaT          1e-4;
 
 writeControl    runTime;
 
-writeInterval   0.1;
+writeInterval   1e-1;
 
 purgeWrite      0;
 
@@ -47,7 +47,7 @@ runTimeModifiable yes;
 
 adjustTimeStep  yes;
 
-maxCo           0.5;
+maxCo           2.5;
 
 maxDeltaT       0.01;
 

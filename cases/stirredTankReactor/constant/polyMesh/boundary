@@ -16,19 +16,27 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-2
+3
 (
-    allBoundary
-    {
-        type            patch;
-        nFaces          9492;
-        startFace       237804;
-    }
     outlet
     {
         type            patch;
-        nFaces          1764;
-        startFace       247296;
+        nFaces          1264;
+        startFace       356432;
+    }
+    impeller
+    {
+        type            wall;
+        inGroups        1(wall);
+        nFaces          2368;
+        startFace       357696;
+    }
+    vessel
+    {
+        type            wall;
+        inGroups        1(wall);
+        nFaces          5372;
+        startFace       360064;
     }
 )
 

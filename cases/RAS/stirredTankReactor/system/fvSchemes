@@ -21,15 +21,15 @@ ddtSchemes
 
 gradSchemes
 {
-    default         Gauss linear;
+    default         cellLimited Gauss linear 1;
 }
 
 divSchemes
 {
     default                         none;
 
-    "div\(phi,alpha.*\)"            Gauss vanLeer;
-    "div\(phir,alpha.*\)"           Gauss vanLeer;
+    "div\(phi,alpha.*\)"            Gauss Minmod;
+    "div\(phir,alpha.*\)"           Gauss Minmod;
 
     "div\(alphaRhoPhi.*,U.*\)"      Gauss limitedLinearV 1;
     "div\(phi.*,U.*\)"              Gauss limitedLinearV 1;
@@ -44,11 +44,12 @@ divSchemes
     "div\(alphaRhoPhi.*,(k|epsilon).*\)"  Gauss limitedLinear 1;
     "div\(phim,(k|epsilon)m\)"      Gauss limitedLinear 1;
 
+
 }
 
 laplacianSchemes
 {
-    default         Gauss linear uncorrected;
+    default         Gauss linear corrected;
 }
 
 interpolationSchemes
