@@ -20,7 +20,7 @@ d_b         0.97e-3;
 nu_F        1.48e-05;
 sigma       0.0728;
 theta_c     38;
-delay       1.0;
+delay       40.0;
 
 // rho0        2600.0;
 // d_p         30e-6;

@@ -133,7 +133,7 @@ PIMPLE
     momentumPredictor true;
     turbOnFinalIterOnly false;
     consistent false;
-    nOuterCorrectors 1;
+    nOuterCorrectors 2;
     nCorrectors     2;
     nNonOrthogonalCorrectors 1;
 //    solvePrimaryRegion    false;

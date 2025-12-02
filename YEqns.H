@@ -9,9 +9,6 @@
     UPtrList<volScalarField>& Y2 = phase2.YActiveRef();
 
     FlotationSoursePart FS(flotation.flotationMassTransfer());
-    // volScalarField Q_gas = 1e-3 * flotation.gasSourseKa();
-
-    // int indGas, indLiq, indParGas, indParLiq;
     
     if (!phase1.pure())
     {
@@ -34,9 +31,6 @@
                             + fvOptions(alpha1, rho1, Y1[i])
                             + FS.Q_phase1
                         );
-                // Y1iEqn -= FS.Q_phase1;
-                // Y1iEqn -= Q_gas;
-                // Info << "Q_gas : " << average(Q_gas).value() << endl;
             }
 
             Y1iEqn.relax();
@@ -70,7 +64,6 @@
 
             if (Y2[i].name() == "particle.liquid" && delay.value() < runTime.value() ){
                 Y2iEqn -= FS.Q_phase2;
-                // Y2iEqn += Q_gas;
             }
 
             Y2iEqn.relax();

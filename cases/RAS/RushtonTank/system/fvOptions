@@ -1,0 +1,197 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7  
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+injector1
+{
+    timeStart       0.0;
+    duration        1000;
+    selectionMode   cellSet;
+    cellSet         injection1;
+}
+
+
+
+options
+{
+    massSource1
+    {
+        type            scalarSemiImplicitSource;
+
+        $injector1;
+
+        volumeMode      absolute;
+        injectionRateSuSp
+        {
+            thermo:rho.gas     (0.016 0); // kg/s
+        }
+    }
+
+    momentumSource1
+    {
+        type            vectorSemiImplicitSource;
+
+        $injector1;
+
+        volumeMode      absolute;
+        injectionRateSuSp
+        {
+            U.gas           ((0 -1.0e-6 0) 0); // kg*m/s^2
+        }
+    }
+
+    energySource1
+    {
+        type            scalarSemiImplicitSource;
+
+        $injector1;
+
+        volumeMode      absolute;
+        injectionRateSuSp
+        {
+            e.gas      (0 0); // kg*m^2/s^3
+        }
+    }
+impeller
+{
+    type            axialFlowTurbineALSource;
+    active          on;
+
+    axialFlowTurbineALSourceCoeffs
+    {
+        fieldNames          (U.liquid);
+        selectionMode       cellSet; // cellSet || points || cellZone
+        cellSet             impeller;
+        origin              (0 0 0);
+        axis                (0 1 0);
+        verticalDirection   (0 -1 0);
+        freeStreamVelocity  (0 0 0);
+        tipSpeedRatio       6.0;
+        rotorRadius         0.105;
+        angleVelocity       87;
+        compressible            off;
+        rhoRef              1000;
+
+
+        dynamicStall
+        {
+            active          off;
+            dynamicStallModel LeishmanBeddoes;
+        }
+
+        endEffects
+        {
+            active          off;
+            endEffectsModel Glauert; // Glauert || Shen || liftingLine
+            GlauertCoeffs
+            {
+                tipEffects  on;
+                rootEffects on;
+            }
+            ShenCoeffs
+            {
+                c1          0.125;
+                c2          21;
+                tipEffects  on;
+                rootEffects on;
+            }
+        }
+
+        blades
+        {
+            blade1
+            {
+                writePerf   true;
+                writeElementPerf true;
+                nElements   8;
+                elementProfiles
+                (
+                    S1 
+                    S1
+                    S1 
+                    S1
+                    S1 
+                    S1
+                    S1
+                    S1
+                    S1
+                );
+                elementData
+                (
+                    #include "elementData"
+                );
+            }
+            blade2
+            {
+                $blade1;
+                writePerf   false;
+                writeElementPerf false;
+                azimuthalOffset 90.0;
+            }
+            blade3
+            {
+                $blade2;
+                azimuthalOffset 180.0;
+            }
+            blade4
+            {
+                $blade3;
+                azimuthalOffset 270.0;
+            }
+        }
+
+        // tower
+        // {
+        //     includeInTotalDrag  false; // default is false
+        //     nElements   6;
+        //     elementProfiles (cylinder);
+        //     elementData
+        //     ( // axial distance (turbine axis), height, diameter
+        //         (-0.14 -0.82 0.09)
+        //         (-0.14 -0.66 0.08)
+        //         (-0.14 -0.42 0.06)
+        //         (-0.14  0.00 0.05)
+        //     );
+        // }
+
+        // hub
+        // {
+        //     nElements   1;
+        //     elementProfiles (cylinder);
+        //     elementData
+        //     ( // axial distance, height, diameter
+        //         (0 0.09 0.09)
+        //         (0 -0.09 0.09)
+        //     );
+        // }
+
+        profileData
+        {
+            S1
+            {
+                data (#include "../../resources/foilData/S2");
+            }
+            // cylinder
+            // {
+            //     data ((-180 0 1.1)(180 0 1.1));
+            // }
+        }
+    }
+}
+}
+
+
+// ************************************************************************* //

@@ -22,4 +22,5 @@ EXE_LIBS = \
     -lreactingMultiphaseSystem \
     -lreactingTwoPhaseSystem \
     -ltwoPhaseReactingTurbulenceModels \
-    -lthermoTools
+    -lthermoTools \
+    -LlibturbinesFoam

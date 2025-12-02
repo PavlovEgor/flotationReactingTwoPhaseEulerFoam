@@ -21,23 +21,10 @@ addLayers       false;
 
 geometry
 {
-    impeller
-    {
-        type triSurfaceMesh;
-        file "impeller.stl";
-    }
     vessel
     {
         type triSurfaceMesh;
         file "vessel.stl";
-    }
-    //- Used to define MRF zone and refine mesh round the impeller 
-    MRF
-    {
-        type searchableCylinder;
-        point1 (0.0 -0.04 0.0);
-        point2 (0.0  0.04 0.0);
-        radius 0.11;
     }
 }
 
@@ -60,11 +47,6 @@ castellatedMeshControls
         {
             file "vessel.eMesh";
             level 0;
-        }
-
-        {
-            file "impeller.eMesh";
-            level 1;
         }
 
     );

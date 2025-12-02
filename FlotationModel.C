@@ -302,7 +302,7 @@ FlotationSoursePart FlotationModel::flotationMassTransfer(){
     // Info << "KaarY2 : " << average(Ka * fluid_.phase2() * fluid_.phase2().rho() * fluid_.phase2().Y(name_of_particles)).value() << endl;                                
     // Info << "Ka : " << average(Ka).value() << nl << "Kd : " << average(Kd).value() << endl;
 
-    return FlotationSoursePart(1e-3 * Q_gas, 1e-3 * Q_liquid);
+    return FlotationSoursePart(Q_gas, Q_liquid);
 
 }
 

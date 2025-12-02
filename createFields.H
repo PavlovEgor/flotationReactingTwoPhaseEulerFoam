@@ -64,3 +64,17 @@ volScalarField particleMass_inAir
     ),
     fluid.phase1() * fluid.phase1().thermoRef().rho()
 );
+
+// Info<< "Reading field particleMass_inAir\n" << endl;
+// volScalarField rhom_my
+// (
+//     IOobject
+//     (
+//         "rhom_my",
+//         runTime.timeName(),
+//         mesh,
+//         IOobject::NO_READ,
+//         IOobject::AUTO_WRITE
+//     ),
+//     fluid.phase1() * fluid.phase1().thermoRef().rho() + fluid.phase2() * fluid.phase2().thermoRef().rho()
+// );
