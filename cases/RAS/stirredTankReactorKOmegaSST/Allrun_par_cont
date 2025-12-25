@@ -19,7 +19,7 @@ runApplication decomposePar
 
 runParallel $FOAM_USER_APPBIN/$(getApplication)
 
-runApplication reconstructPar
+#runApplication reconstructPar
 
 
 #------------------------------------------------------------------------------

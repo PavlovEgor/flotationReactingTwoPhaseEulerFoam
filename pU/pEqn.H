@@ -273,32 +273,32 @@ while (pimple.correct())
         }
     }
 
-    // Add mass transfer
-    {
-        PtrList<volScalarField> dmdts(fluid.dmdts());
-        if (dmdts.set(0))
-        {
-            if (pEqnComp1.valid())
-            {
-                pEqnComp1.ref() -= dmdts[0]/rho1;
-            }
-            else
-            {
-                pEqnComp1 = fvm::Su(- dmdts[0]/rho1, p_rgh);
-            }
-        }
-        if (dmdts.set(1))
-        {
-            if (pEqnComp2.valid())
-            {
-                pEqnComp2.ref() -= dmdts[1]/rho2;
-            }
-            else
-            {
-                pEqnComp2 = fvm::Su(- dmdts[1]/rho2, p_rgh);
-            }
-        }
-    }
+    // // Add mass transfer
+    // {
+    //     PtrList<volScalarField> dmdts(fluid.dmdts());
+    //     if (dmdts.set(0))
+    //     {
+    //         if (pEqnComp1.valid())
+    //         {
+    //             pEqnComp1.ref() -= dmdts[0]/rho1;
+    //         }
+    //         else
+    //         {
+    //             pEqnComp1 = fvm::Su(- dmdts[0]/rho1, p_rgh);
+    //         }
+    //     }
+    //     if (dmdts.set(1))
+    //     {
+    //         if (pEqnComp2.valid())
+    //         {
+    //             pEqnComp2.ref() -= dmdts[1]/rho2;
+    //         }
+    //         else
+    //         {
+    //             pEqnComp2 = fvm::Su(- dmdts[1]/rho2, p_rgh);
+    //         }
+    //     }
+    // }
 
     // Cache p prior to solve for density update
     const volScalarField p_rgh_0(p_rgh);
@@ -422,6 +422,9 @@ while (pimple.correct())
     rho1 += psi1*(p_rgh - p_rgh_0);
     rho2 += psi2*(p_rgh - p_rgh_0);
 
+    // flotation.updateRho1(p, rho1);
+    // flotation.updateRho2(p, rho2);
+    
     // Correct p_rgh for consistency with p and the updated densities
     rho = fluid.rho();
     p_rgh = p - rho*gh;

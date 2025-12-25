@@ -34,7 +34,7 @@ private:
 
     word name_of_particles;
 
-    word attachmentModel;
+    word adhesionModel;
     word inductionTimeModel;
     scalar A;
     scalar B;
@@ -59,17 +59,21 @@ public:
 
     volScalarField collisionEfficiency();
 
-    volScalarField attachmentEfficiency();
+    volScalarField adhesionEfficiency();
 
     volScalarField stabilityEfficiency(const volScalarField& epsilon);
 
-    volScalarField K_attachment(const volScalarField& epsilon, const volScalarField& Es);
+    volScalarField K_adhesion(const volScalarField& epsilon, const volScalarField& Es);
 
     volScalarField K_detachment(const volScalarField& epsilon, const volScalarField& Es);
 
     FlotationSoursePart flotationMassTransfer();
 
-    volScalarField gasSourseKa();
+    volScalarField gasSourse();
+
+    void updateRho1(volScalarField& p, volScalarField& rho1);
+
+    void updateRho2(volScalarField& p, volScalarField& rho2);
 };
 
 

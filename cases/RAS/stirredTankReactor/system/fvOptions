@@ -18,7 +18,7 @@ FoamFile
 injector1
 {
     timeStart       0.0;
-    duration        30;
+    duration        1000;
     selectionMode   cellSet;
     cellSet         injection1;
 }
@@ -34,7 +34,7 @@ options
         volumeMode      absolute;
         injectionRateSuSp
         {
-            thermo:rho.gas     (5.0e-3 0); // kg/s
+            thermo:rho.gas     (0.016 0); // kg/s
         }
     }
 

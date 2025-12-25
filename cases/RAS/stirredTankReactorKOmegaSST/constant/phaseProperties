@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type            interfaceCompositionPhaseChangeTwoPhaseSystem;
+type            basicTwoPhaseSystem;
 
 phases          (gas liquid);
 
@@ -159,7 +159,7 @@ interfaceComposition
     }
 );
 
-heatTransfer.gas
+heatTransfer
 (
     (gas in liquid)
     {
@@ -174,22 +174,22 @@ heatTransfer.gas
     }
 );
 
-heatTransfer.liquid
-(
-    (gas in liquid)
-    {
-        type RanzMarshall;
-        residualAlpha 1e-4;
-    }
+// heatTransfer.liquid
+// (
+//     (gas in liquid)
+//     {
+//         type RanzMarshall;
+//         residualAlpha 1e-4;
+//     }
 
-    (liquid in gas)
-    {
-        type spherical;
-        residualAlpha 1e-4;
-    }
-);
+//     (liquid in gas)
+//     {
+//         type spherical;
+//         residualAlpha 1e-4;
+//     }
+// );
 
-massTransfer.gas
+massTransfer
 (
     (gas in liquid)
     {
@@ -204,20 +204,20 @@ massTransfer.gas
     }
 );
 
-massTransfer.liquid
-(
-    (gas in liquid)
-    {
-        type Frossling;
-        Le 1.0;
-    }
+// massTransfer.liquid
+// (
+//     (gas in liquid)
+//     {
+//         type Frossling;
+//         Le 1.0;
+//     }
 
-    (liquid in gas)
-    {
-        type spherical;
-        Le 1.0;
-    }
-);
+//     (liquid in gas)
+//     {
+//         type spherical;
+//         Le 1.0;
+//     }
+// );
 
 phaseTransfer
 (

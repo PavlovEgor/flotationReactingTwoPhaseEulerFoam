@@ -18,7 +18,7 @@ solvers
 {
     "alpha.*"
     {
-        nAlphaCorr      1;
+        nAlphaCorr      2;
         nAlphaSubCycles 3;
     }
 
@@ -104,7 +104,7 @@ solvers
     {
         solver          PBiCGStab;
         preconditioner  DILU;
-        tolerance       1e-6;
+        tolerance       1e-8;
         relTol          0;
         residualAlpha   1e-8;
 
@@ -114,7 +114,7 @@ solvers
     {
         solver          PBiCGStab;
         preconditioner  DILU;
-        tolerance       1e-6;
+        tolerance       1e-8;
         relTol          0;
         residualAlpha   1e-8;
     }
@@ -133,7 +133,7 @@ PIMPLE
     momentumPredictor true;
     turbOnFinalIterOnly false;
     consistent false;
-    nOuterCorrectors 2;
+    nOuterCorrectors 4;
     nCorrectors     2;
     nNonOrthogonalCorrectors 1;
 //    solvePrimaryRegion    false;

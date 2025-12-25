@@ -86,8 +86,6 @@ int main(int argc, char *argv[])
 
     Info<< "\nStarting time loop\n" << endl;
 
-
-
     while (runTime.run())
     {
         #include "readTimeControls.H"
@@ -117,37 +115,31 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            if (delay.value() > runTime.value() ){
-                fluid.solve();
-                fluid.correct();
-            }
+            fluid.solve();
+            fluid.correct();
 
             #include "YEqns.H"
 
-            if (delay.value() > runTime.value() ){
-                if (faceMomentum)
-                {
-                    #include "pUf/UEqns.H"
-                    #include "EEqns.H"
-                    #include "pUf/pEqn.H"
-                }
-                else
-                {
-                    #include "pU/UEqns.H"
-                    #include "EEqns.H"
-                    #include "pU/pEqn.H"
-                }
+            if (faceMomentum)
+            {
+                #include "pUf/UEqns.H"
+                // #include "EEqns.H"
+                #include "pUf/pEqn.H"
+            }
+            else
+            {
+                #include "pU/UEqns.H"
+                // #include "EEqns.H"
+                #include "pU/pEqn.H"
+            }
 
-                fluid.correctKinematics();
+            fluid.correctKinematics();
 
-                if (pimple.turbCorr())
-                {
-                    fluid.correctTurbulence();
-                }
+            if (pimple.turbCorr())
+            {
+                fluid.correctTurbulence();
             }
         }
-
-        // rhom_my = fluid.phase1() * fluid.phase1().thermoRef().rho() + fluid.phase2() * fluid.phase2().thermoRef().rho();
 
         runTime.write();
 

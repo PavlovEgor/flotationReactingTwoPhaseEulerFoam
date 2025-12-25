@@ -18,7 +18,7 @@ solvers
 {
     "alpha.*"
     {
-        nAlphaCorr      1;
+        nAlphaCorr      2;
         nAlphaSubCycles 3;
     }
 
@@ -33,7 +33,7 @@ solvers
 		maxIter	100;
 		nPostSweeps	1;
 		agglomerator	faceAreaPair;
-		nCellsInCoarsestLevel	10;
+		nCellsInCoarsestLevel	5;
 		tolerance	1.0E-6;
 		mergeLevels	1;
     }
@@ -100,21 +100,21 @@ solvers
     //     minIter         1;
     // }
 
-    "(U.*|Yi.*|(k|epsilon).*)"
+    "(U.*|Yi.*|(k|epsilon|omega).*)"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
-        tolerance       1e-6;
+        tolerance       1e-8;
         relTol          0;
         residualAlpha   1e-8;
 
     }
 
-    "(U.*|Yi.*|(k|epsilon).*).*Final"
+    "(U.*|Yi.*|(k|epsilon|omega).*).*Final"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
-        tolerance       1e-6;
+        tolerance       1e-8;
         relTol          0;
         residualAlpha   1e-8;
     }
@@ -133,7 +133,7 @@ PIMPLE
     momentumPredictor true;
     turbOnFinalIterOnly false;
     consistent false;
-    nOuterCorrectors 1;
+    nOuterCorrectors 2;
     nCorrectors     2;
     nNonOrthogonalCorrectors 1;
 //    solvePrimaryRegion    false;
@@ -181,7 +181,7 @@ relaxationFactors
 {
     fields
     {
-        p               0.3;
+        p               0.5;
     }
     equations
     {

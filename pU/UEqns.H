@@ -10,12 +10,16 @@ fvVectorMatrix U2Eqn(U2, rho2.dimensions()*U2.dimensions()*dimVolume/dimTime);
     phaseSystem::momentumTransferTable&
         momentumTransfer(momentumTransferPtr());
 
+    // volScalarField deltaM = flotation.gasSourse();
+    // volVectorField momentumFlotationSource = deltaM * (U1 - U2);
+
     {
         U1Eqn =
         (
             phase1.UEqn()
          ==
            *momentumTransfer[phase1.name()]
+        //   + momentumFlotationSource
           + fvOptions(alpha1, rho1, U1)
         );
         U1Eqn.relax();
@@ -29,6 +33,7 @@ fvVectorMatrix U2Eqn(U2, rho2.dimensions()*U2.dimensions()*dimVolume/dimTime);
             phase2.UEqn()
          ==
            *momentumTransfer[phase2.name()]
+        //   - momentumFlotationSource
           + fvOptions(alpha2, rho2, U2)
         );
         U2Eqn.relax();

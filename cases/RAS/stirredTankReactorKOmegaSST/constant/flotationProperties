@@ -20,7 +20,7 @@ d_b         0.97e-3;
 nu_F        1.48e-05;
 sigma       0.0728;
 theta_c     38;
-delay       40.0;
+delay       10.0;
 
 // rho0        2600.0;
 // d_p         30e-6;
@@ -45,16 +45,16 @@ stabilityModel{
     A_s                      0.5;
 }
 
-// attachmentModel{
-//     attachmentModel      Yoon-Luttrell;
+// adhesionModel{
+//     adhesionModel      Yoon-Luttrell;
 
 //     inductionTimeModel  Dai;
 //     A                   0.051;
 //     B                   0.6;
 // }
 
-attachmentModel{
-    attachmentModel     Yoon-Luttrell;
+adhesionModel{
+    adhesionModel     Yoon-Luttrell;
     inductionTimeModel  KohSchwarz;
 }
 

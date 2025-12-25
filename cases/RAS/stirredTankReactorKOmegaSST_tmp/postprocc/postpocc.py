@@ -33,7 +33,7 @@ def find_time(dir_name=''):
 
     return zip(*sorted_combined)
 
-path = "/home/user/OpenFOAM/user-v2412/applications/solvers/flotationReactingTwoPhaseEulerFoam/cases/RAS/stirredTankReactorKOmegaSST"
+path = "/home/user/OpenFOAM/user-v2412/applications/solvers/flotationReactingTwoPhaseEulerFoam/cases/RAS/stirredTankReactorKOmegaSST_tmp"
 T, T_name = find_time(path)
 X = np.zeros(len(T))
 Y = np.zeros(len(T))
@@ -44,7 +44,6 @@ for i, t in enumerate(T):
     Y[i] = np.sum(Ofpp.parse_internal_field(path + "/" + T_name[i] + "/alpha.liquid") * 
                   1000 * 
                   Ofpp.parse_internal_field(path + "/" + T_name[i] + "/particle.liquid"))
-
 # plt.plot(T, X / np.max(X), "-o")
 T = np.array(T)
 Y = Y[T > delay]
@@ -96,11 +95,11 @@ df_15 = pd.read_csv(
     engine='python'   
 )
 
-plt.plot(df_240[0].array, df_240[1].array, label="240 micron KohSchwarz")
-plt.plot(df_60[0].array, df_60[1].array, label="60 KohSchwarz")
-# plt.plot(df_30[0].array, df_30[1].array, label="30 KohSchwarz")
-plt.plot(df_30_2[0].array, df_30_2[1].array, label="30 KohSchwarz")
-plt.plot(df_15[0].array, df_15[1].array, label="15 KohSchwarz")
+# plt.plot(df_240[0].array, df_240[1].array, label="240 micron KohSchwarz")
+# plt.plot(df_60[0].array, df_60[1].array, label="60 KohSchwarz")
+plt.plot(df_30[0].array, df_30[1].array, label="30 KohSchwarz")
+# plt.plot(df_30_2[0].array, df_30_2[1].array, label="30 KohSchwarz")
+# plt.plot(df_15[0].array, df_15[1].array, label="15 KohSchwarz")
 
 # plt.xscale('log')  # Логарифмический масштаб по оси X
 plt.yscale('log')  # Логарифмический масштаб по оси Y
@@ -111,7 +110,7 @@ plt.ylabel('относительная массовая доля частиц')
 plt.grid(True, which="both", ls="--")  # Сетка для логарифмического масштаба
 plt.legend()
 
-plt.xlim(0, 300)
+plt.xlim(0, 150)
 plt.ylim(0, 1)
 
 plt.show()
