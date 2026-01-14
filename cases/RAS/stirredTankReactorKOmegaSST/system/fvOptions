@@ -34,35 +34,35 @@ options
         volumeMode      absolute;
         injectionRateSuSp
         {
-            thermo:rho.gas     (0.016 0); // kg/s
+            thermo:rho.gas     (0.000133 0); // kg/s
         }
     }
 
-    momentumSource1
-    {
-        type            vectorSemiImplicitSource;
+    // momentumSource1
+    // {
+    //     type            vectorSemiImplicitSource;
 
-        $injector1;
+    //     $injector1;
 
-        volumeMode      absolute;
-        injectionRateSuSp
-        {
-            U.gas           ((0 -1.0e-6 0) 0); // kg*m/s^2
-        }
-    }
+    //     volumeMode      absolute;
+    //     injectionRateSuSp
+    //     {
+    //         U.gas           ((0 -1.0e-6 0) 0); // kg*m/s^2
+    //     }
+    // }
 
-    energySource1
-    {
-        type            scalarSemiImplicitSource;
+    // energySource1
+    // {
+    //     type            scalarSemiImplicitSource;
 
-        $injector1;
+    //     $injector1;
 
-        volumeMode      absolute;
-        injectionRateSuSp
-        {
-            e.gas      (90 0); // kg*m^2/s^3
-        }
-    }
+    //     volumeMode      absolute;
+    //     injectionRateSuSp
+    //     {
+    //         e.gas      (90 0); // kg*m^2/s^3
+    //     }
+    // }
 }
 
 

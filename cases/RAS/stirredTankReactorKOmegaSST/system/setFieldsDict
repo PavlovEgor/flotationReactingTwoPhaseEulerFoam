@@ -17,8 +17,8 @@ FoamFile
 
 defaultFieldValues
 (
-    volScalarFieldValue alpha.gas 0.80
-    volScalarFieldValue alpha.liqiud 0.20
+    volScalarFieldValue alpha.gas 1.0
+    volScalarFieldValue alpha.liqiud 0.0
     volScalarFieldValue particle.liquid 0.0
 );
 
@@ -26,11 +26,11 @@ regions
 (
     boxToCell
     {
-        box (-0.21 -0.2 -0.21) (0.21 0.45 0.21);
+        box (-0.21 -0.2 -0.21) (0.21 0.23 0.21);
         fieldValues
         (
-                volScalarFieldValue alpha.gas 0.0
-                volScalarFieldValue alpha.liquid 1.0
+                volScalarFieldValue alpha.gas 0.05
+                volScalarFieldValue alpha.liquid 0.95
 	        volScalarFieldValue particle.liquid 0.2
         );
     }

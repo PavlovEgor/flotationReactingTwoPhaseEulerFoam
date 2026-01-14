@@ -27,11 +27,11 @@ regions
 (
     boxToCell
     {
-        box (0 0 0) (0.15 1.501 0.1);
+        box (0 0 0) (0.15 1.80 0.1);
         fieldValues
         (
-            volScalarFieldValue alpha.gas 0.05
-            volScalarFieldValue alpha.liquid 0.95
+            volScalarFieldValue alpha.gas 0.04
+            volScalarFieldValue alpha.liquid 0.96
 
             volScalarFieldValue pacticle.gas 0.0
             volScalarFieldValue particle.liquid 0.2

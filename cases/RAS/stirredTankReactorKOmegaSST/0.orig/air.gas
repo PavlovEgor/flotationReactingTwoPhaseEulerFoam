@@ -25,18 +25,18 @@ boundaryField
         type               zeroGradient;
     }
     
-    // outlet
-    // {
-    //     type            inletOutlet;
-    //     phi             phi.gas;
-    //     inletValue      $internalField;
-    //     value           $internalField;
-    // }
-
     outlet
     {
-        type                zeroGradient;
+        type            inletOutlet;
+        phi             phi.gas;
+        inletValue      $internalField;
+        value           $internalField;
     }
+
+    // outlet
+    // {
+    //     type                zeroGradient;
+    // }
     
 }
 

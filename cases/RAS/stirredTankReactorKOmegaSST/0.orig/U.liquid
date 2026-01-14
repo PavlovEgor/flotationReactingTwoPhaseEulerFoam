@@ -25,12 +25,12 @@ boundaryField
         type               noSlip;
     }
 
-    // outlet
-    // {
-    //     type               pressureInletOutletVelocity;
-    //     phi                phi.liquid;
-    //     value              $internalField;
-    // }
+    outlet
+    {
+        type               pressureInletOutletVelocity;
+        phi                phi.liquid;
+        value              $internalField;
+    }
 
     // outlet
     // {
@@ -40,10 +40,10 @@ boundaryField
     //     value           uniform (0 0 0);
     // }
 
-    outlet
-    {
-        type                slip;
-    }
+    // outlet
+    // {
+    //     type                slip;
+    // }
 }
 
 

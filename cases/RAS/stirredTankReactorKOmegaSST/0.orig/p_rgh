@@ -26,12 +26,12 @@ boundaryField
         value              $internalField;
     }
 
-    // outlet
-    // {
-    //     type            prghPressure;
-    //     p               $internalField;
-    //     value           $internalField;
-    // }
+    outlet
+    {
+        type            prghPressure;
+        p               $internalField;
+        value           $internalField;
+    }
 
     // outlet
     // {
@@ -50,12 +50,12 @@ boundaryField
     //     type            zeroGradient;
     // }
 
-    outlet
-    {
-        type            fixedFluxPressure;
-        rho             rho;
-        value           uniform 0;
-    }
+    // outlet
+    // {
+    //     type            fixedFluxPressure;
+    //     rho             rho;
+    //     value           uniform 0;
+    // }
 }
 
 // ************************************************************************* //

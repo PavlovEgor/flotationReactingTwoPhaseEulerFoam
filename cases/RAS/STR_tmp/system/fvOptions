@@ -25,18 +25,18 @@ injector1
 
 options
 {
-    // massSource1
-    // {
-    //     type            scalarSemiImplicitSource;
+    massSource1
+    {
+        type            scalarSemiImplicitSource;
 
-    //     $injector1;
+        $injector1;
 
-    //     volumeMode      absolute;
-    //     injectionRateSuSp
-    //     {
-    //         thermo:rho.gas     (0.016 0); // kg/s
-    //     }
-    // }
+        volumeMode      absolute;
+        injectionRateSuSp
+        {
+            thermo:rho.gas     (0.00013 0); // kg/s
+        }
+    }
 
     // momentumSource1
     // {

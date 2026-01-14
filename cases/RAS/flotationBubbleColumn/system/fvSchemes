@@ -21,34 +21,46 @@ ddtSchemes
 
 gradSchemes
 {
-    default         Gauss linear;
+    default         cellLimited Gauss linear 1;
 }
 
 divSchemes
 {
     default                         none;
 
-    "div\(phi,alpha.*\)"            Gauss vanLeer;
-    "div\(phir,alpha.*\)"           Gauss vanLeer;
+    "div\(phi,alpha.*\)"            Gauss Minmod;
+    "div\(phir,alpha.*\)"           Gauss Minmod;
+
+    // "div\(phi,alpha.*\)"            Gauss upwind;
+    // "div\(phir,alpha.*\)"           Gauss upwind;
 
     "div\(alphaRhoPhi.*,U.*\)"      Gauss limitedLinearV 1;
     "div\(phi.*,U.*\)"              Gauss limitedLinearV 1;
+    // "div\(alphaRhoPhi.*,U.*\)"      Gauss upwind;
+    // "div\(phi.*,U.*\)"              Gauss upwind;
 
     "div\(alphaRhoPhi.*,Yi\)"       Gauss limitedLinear 1;
-    "div\(alphaRhoPhi.*,(h|e).*\)"  Gauss limitedLinear 1;
-    "div\(alphaRhoPhi.*,K.*\)"      Gauss limitedLinear 1;
+    // "div\(alphaRhoPhi.*,Yi\)"       Gauss upwind;
+
+    // "div\(alphaRhoPhi.*,(h|e).*\)"  Gauss limitedLinear 1;
+    // "div\(alphaRhoPhi.*,K.*\)"      Gauss limitedLinear 1;
     "div\(alphaPhi.*,p\)"           Gauss limitedLinear 1;
+    // "div\(alphaRhoPhi.*,(h|e).*\)"  Gauss upwind;
+    // "div\(alphaRhoPhi.*,K.*\)"      Gauss upwind;
+    // "div\(alphaPhi.*,p\)"           Gauss upwind;
 
     "div\(\(\(\(alpha.*\*thermo:rho.*\)*nuEff.*\)\*dev2\(T\(grad\(U.*\)\)\)\)\)" Gauss linear;
 
-    "div\(alphaRhoPhi.*,(k|epsilon).*\)"  Gauss limitedLinear 1;
-    "div\(phim,(k|epsilon)m\)"      Gauss limitedLinear 1;
+    "div\(alphaRhoPhi.*,(k|epsilon|omega).*\)"  Gauss limitedLinear 1;
+    "div\(phim,(k|epsilon|omega)m\)"      Gauss limitedLinear 1;
+    // "div\(alphaRhoPhi.*,(k|epsilon|omega).*\)"  bounded Gauss upwind;
+    // "div\(phim,(k|epsilon|omega)m\)"      bounded Gauss upwind;
 
 }
 
 laplacianSchemes
 {
-    default         Gauss linear uncorrected;
+    default         Gauss linear corrected;
 }
 
 interpolationSchemes
@@ -61,5 +73,8 @@ snGradSchemes
     default         uncorrected;
 }
 
-
+wallDist
+{
+    method meshWave;
+}
 // ************************************************************************* //

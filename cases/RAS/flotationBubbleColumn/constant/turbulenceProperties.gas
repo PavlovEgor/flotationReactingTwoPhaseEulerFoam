@@ -17,14 +17,25 @@ FoamFile
 //simulationType  laminar;
 simulationType      RAS;
 
+// RAS
+// {
+//     RASModel        mixtureKEpsilon; // LaheyKEpsilon;
+
+//     turbulence      on;
+
+//     printCoeffs     on;
+// }
+
 RAS
 {
-    RASModel        mixtureKEpsilon; // LaheyKEpsilon;
+    // Tested with kEpsilon, realizableKE, kOmega, kOmegaSST, v2f,
+    // ShihQuadraticKE, LienCubicKE.
+    RASModel        kOmegaSST; 
 
     turbulence      on;
 
     printCoeffs     on;
-}
 
+}
 
 // ************************************************************************* //

@@ -20,7 +20,7 @@ thermoType
     mixture         multiComponentMixture;
     transport       const;
     thermo          eConst;
-    equationOfState perfectGas;
+    equationOfState perfectFluid;
     specie          specie;
     energy          sensibleInternalEnergy;
 }
@@ -28,17 +28,21 @@ thermoType
 species
 (
     air
-    water
     particle
 );
 
 inertSpecie air;
 
-"(mixture|air)"
+air
 {
     specie
     {
         molWeight   28.9;
+    }
+    equationOfState
+    {
+        R           286;
+        rho0        0.01;
     }
     thermodynamics
     {
@@ -52,29 +56,11 @@ inertSpecie air;
     }
 }
 
-water
-{
-    specie
-    {
-        molWeight   18.0153;
-    }
-    thermodynamics
-    {
-        Hf          -1.3435e+07;
-        Cv          1396.3;
-    }
-    transport
-    {
-        mu          1.84e-05;
-        Pr          0.7;
-    }
-}
-
 particle
 {
     specie
     {
-        molWeight   2600.0;
+        molWeight   177014728800000.0;
     }
     thermodynamics
     {
@@ -85,6 +71,11 @@ particle
     {
         mu          1.84e-05;
         Pr          0.7;
+    }
+    equationOfState
+    {
+        R           1e8;
+        rho0        2600;
     }
 }
 
