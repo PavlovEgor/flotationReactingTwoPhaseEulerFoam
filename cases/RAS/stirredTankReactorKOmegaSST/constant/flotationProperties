@@ -31,15 +31,15 @@ delay       2.0;
 
 name_of_particles particle;
 
-// collisionModel{
-//     collisionFrequencyModel  SchubertBischofberger;
-//     collisionEfficiencyModel Sutherland;
-// }
-
 collisionModel{
-    collisionFrequencyModel  SaffmanTurner;
+    collisionFrequencyModel  SchubertBischofberger;
     collisionEfficiencyModel YoonLuttrell;
 }
+
+// collisionModel{
+//     collisionFrequencyModel  SaffmanTurner;
+//     collisionEfficiencyModel YoonLuttrell;
+// }
 
 stabilityModel{
     stabilityEfficiencyModel Schulze;
@@ -50,7 +50,7 @@ stabilityModel{
 }
 
 // adhesionModel{
-//     adhesionModel      Yoon-Luttrell;
+//     adhesionModel      YoonLuttrell;
 
 //     inductionTimeModel  Dai;
 //     A                   0.051;
@@ -58,8 +58,13 @@ stabilityModel{
 // }
 
 adhesionModel{
-    adhesionModel     Yoon-Luttrell;
+    adhesionModel     YoonLuttrell;
     inductionTimeModel  KohSchwarz;
 }
+
+// adhesionModel{
+//     adhesionModel       DobbyFinch;
+//     inductionTimeModel  KohSchwarz;
+// }
 
 // ************************************************************************* //

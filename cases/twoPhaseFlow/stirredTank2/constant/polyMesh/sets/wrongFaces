@@ -1,44 +1,21 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2412                                 |
+|  \\    /   O peration     | Version:  2412                                  |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
     version     2.0;
-    format      ascii;
-    class       volScalarField;
-    object      epsilon.gas;
+    format      binary;
+    arch        "LSB;label=32;scalar=64";
+    class       faceSet;
+    location    "constant/polyMesh/sets";
+    object      wrongFaces;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -3 0 0 0 0];
-
-internalField   uniform 1.5e-4;
-
-boundaryField
-{
-    impeller
-    {
-        type            epsilonWallFunction;
-        value           $internalField;
-    }
-    vessel
-    {
-        type            epsilonWallFunction;
-        value           $internalField;
-    }
-
-    outlet
-    {
-        type            inletOutlet;
-        phi             phi.gas;
-        inletValue      $internalField;
-        value           $internalField;
-    }
-
-}
+7(249923 229818 13170 248080 109311 199494 282116)
 
 // ************************************************************************* //

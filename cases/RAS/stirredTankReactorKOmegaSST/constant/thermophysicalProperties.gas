@@ -42,7 +42,7 @@ inertSpecie air;
     equationOfState
     {
         R           286;
-        rho0        0.01;
+        rho0        0.0;
     }
     thermodynamics
     {

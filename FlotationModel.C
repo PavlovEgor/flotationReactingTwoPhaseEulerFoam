@@ -235,8 +235,8 @@ volScalarField FlotationModel::K_adhesion(const volScalarField& epsilon, const v
         Info << "rho1: " << average(fluid_.phase1().rho()).value() << " " <<min(fluid_.phase1().rho()).value() << " " << max(fluid_.phase1().rho()).value() << nl;
         Info << "rho2: " << average(fluid_.phase2().rho()).value() << " " <<min(fluid_.phase2().rho()).value() << " " << max(fluid_.phase2().rho()).value() << nl;
 
-        volScalarField Up = (0.33 * Foam::pow(epsilon, 4.0/9.0) * Foam::pow(d_p, 7.0/9.0) / Foam::pow(nu_F, 1.0/3.0)) * Foam::pow((rhoP - fluid_.phase2().rho()) / fluid_.phase2().rho(), 2.0/3.0);
-        volScalarField Ub = (0.33 * Foam::pow(epsilon, 4.0/9.0) * Foam::pow(d_b, 7.0/9.0) / Foam::pow(nu_F, 1.0/3.0)) * Foam::pow((fluid_.phase2().rho() - fluid_.phase1().rho()) / fluid_.phase2().rho(), 2.0/3.0);
+        volScalarField Up = (0.33 * Foam::pow(epsilon, 4.0/9.0) * Foam::pow(d_p, 7.0/9.0) / Foam::pow(nu_F, 1.0/3.0)) * Foam::pow(Foam::mag(rhoP - fluid_.phase2().rho()) / fluid_.phase2().rho(), 2.0/3.0);
+        volScalarField Ub = (0.33 * Foam::pow(epsilon, 4.0/9.0) * Foam::pow(d_b, 7.0/9.0) / Foam::pow(nu_F, 1.0/3.0)) * Foam::pow(Foam::mag(fluid_.phase2().rho() - fluid_.phase1().rho()) / fluid_.phase2().rho(), 2.0/3.0);
         
         Z = 5.0 * (d_p + d_b / 2.0) * (d_p + d_b / 2.0) * Foam::pow(Up * Up + Ub * Ub, 0.5);
     } else{
@@ -290,22 +290,20 @@ FlotationSoursePart FlotationModel::flotationMassTransfer(){
     const volScalarField& omega = mesh_.lookupObject<volScalarField>("omega.liquid");
     volScalarField epsilon = k * omega * scalar(0.09);
 
-    const volScalarField& Es = stabilityEfficiency(epsilon);
+    const volScalarField Es = 0.8 * stabilityEfficiency(epsilon);
 
     Info << "Es " << nl; 
+    Info << average(Es).value() << " " <<min(Es).value() << " " << max(Es).value() << nl;
 
     volScalarField Ka = K_adhesion(epsilon, Es);
 
     Info << "Ka " << nl; 
+    Info << average(Ka).value() << " " <<min(Ka).value() << " " << max(Ka).value() << nl;
 
     volScalarField Kd = K_detachment(epsilon, Es);
 
     Info << "Kd " << nl; 
-
-
     Info << average(Kd).value() << " " <<min(Kd).value() << " " << max(Kd).value() << nl;
-    Info << average(Ka).value() << " " <<min(Ka).value() << " " << max(Ka).value() << nl;
-
 
     volScalarField alphaRho1 = fluid_.phase1() * fluid_.phase1().rho();
     volScalarField alphaRho2 = fluid_.phase2() * fluid_.phase2().rho();

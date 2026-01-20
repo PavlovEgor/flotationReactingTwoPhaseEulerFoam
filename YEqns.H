@@ -16,7 +16,7 @@
             );
             if (Y1[i].name() == "particle.gas" && delay.value() < runTime.value() )
             {
-                Y1iEqn -= FS.Q_phase1;
+                Y1iEqn -= 1e-4 * FS.Q_phase1;
             }
             Y1iEqn.relax();
             Y1iEqn.solve("Yi");
@@ -42,10 +42,15 @@
                 }
                 particleMass_inAir = alpha1 * rho1 * Y1[i];
 
-                Info << average(Y1[i]).value() << " " <<min(Y1[i]).value() << " " << max(Y1[i]).value() << nl;
+                Info << average(Y1[i]).value() << " " << min(Y1[i]).value() << " " << max(Y1[i]).value() << nl;
             }
+
         }
+
     }
+
+    phase1.correctThermo();
+
     if (!phase2.pure())
     {
         forAll(Y2, i)
@@ -59,7 +64,7 @@
             );
             if (Y2[i].name() == "particle.liquid" && delay.value() < runTime.value() )
             {
-                Y2iEqn -= FS.Q_phase2;
+                Y2iEqn -= 1e-4 * FS.Q_phase2;
             }
             Y2iEqn.relax();
             Y2iEqn.solve("Yi");
@@ -86,5 +91,7 @@
             }
         }
     }
-    fluid.correct();
+    phase2.correctThermo();
+
+    Info << average(Y1[0]).value() << " " <<min(Y1[0]).value() << " " << max(Y1[0]).value() << nl;
 }

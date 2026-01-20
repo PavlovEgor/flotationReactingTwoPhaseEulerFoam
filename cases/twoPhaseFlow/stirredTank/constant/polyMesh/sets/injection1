@@ -1,40 +1,61 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2412                                 |
+|  \\    /   O peration     | Version:  2412                                  |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
     version     2.0;
-    format      ascii;
-    class       volScalarField;
-    object      epsilonm;
+    format      binary;
+    arch        "LSB;label=32;scalar=64";
+    class       cellSet;
+    location    "constant/polyMesh/sets";
+    object      injection1;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -3 0 0 0 0];
 
-internalField   uniform 1.5e-4;
-
-boundaryField
-{
-    "(impeller|vessel)"
-    {
-        type            zeroGradient;
-        value           $internalField;
-    }
-
-    outlet
-    {
-        type            inletOutlet;
-        phi             phim;
-        inletValue      $internalField;
-        value           $internalField;
-    }
-
-}
+36
+(
+21184
+21185
+21186
+21187
+21188
+21189
+22887
+22888
+22889
+22890
+22891
+22892
+24596
+24597
+24598
+24599
+24600
+24601
+26304
+26305
+26306
+26307
+26308
+26309
+27917
+27918
+27919
+27920
+27921
+27922
+29623
+29624
+29625
+29626
+29627
+29628
+)
 
 
 // ************************************************************************* //
